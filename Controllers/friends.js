@@ -2,6 +2,7 @@ const User = require('../Models/User');
 
 module.exports = {
     findFriend: async function (req, res) {
+        console.log('fwefwefewfewfweffewfewfewf');
         const foundFriend = await User.findOne({ mobileNumber: req.query.mobileNumber }, { password: 0 });
         if (!foundFriend) return res.status(400).json({ status: false, message: 'Not found any friend with this number.' });
         res.status(200).json({ status: true, friend: foundFriend });

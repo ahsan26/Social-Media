@@ -7,7 +7,7 @@
     <title>Friends</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
-<body onload="renderFriends()">
+<body onload="fetchFriends()">
         <nav>
             <ul>
                 <a href="/">
@@ -24,14 +24,12 @@
                 </a>
             </ul>
         </nav>
-        <form action="JavaScript:void(0)" onsubmit="addFriend()">
-            <input type="text" id="name" />
-            <input type="number" id="age" />
-            <input type="file" id="profilePic" />
-            <button type="submit">Add Friend</button>
+        <form action="JavaScript:void(0)" onsubmit="findFriend()">
+            <input type="number"  id= "mobNumber" />
+            <button type="submit">Find Friend</button>
         </form>
     
-        <ul id="friends"></ul>
+        <ul id="foundFriends"></ul>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="main.js"></script>

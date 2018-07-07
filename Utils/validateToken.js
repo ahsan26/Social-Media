@@ -1,11 +1,10 @@
 const JWT = require('jsonwebtoken');
 
-module.exports = async function (next) {
-    let token = req.headers['Authorization'];
+module.exports = async function (req, res, next) {
+    let token = req.headers['authorization'];
     let decoded = await JWT.decode(token);
     if (decoded) {
         req.body.userId = decoded.userId;
         next();
-    }
-    next("Unauthorized");
+    } else next("Unauthorized");
 }

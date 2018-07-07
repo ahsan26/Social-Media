@@ -1,25 +1,10 @@
-function addFriend(e) {
-    let name = document.getElementById('name').value,
-        age = document.getElementById('age').value,
-        profilePic = document.getElementById('profilePic').files[0];
-    var reader = new FileReader();
-    reader.addEventListener("loadend", _ => {
-        let base64Data = reader.result
-        axios.post('/friends/add', {
-            name: name,
-            age: age,
-            profilePic: base64Data
-        }).then(data => {
-            console.log(data);
-        })
-    });
-    reader.readAsDataURL(profilePic);
-}
-function renderFriends() {
-    axios.get('/friends/list').then(data => {
-        data.data.friends.forEach(item => {
-            document.getElementById('friends').innerHTML += `<li class="eachFriendLI"><img class="eachFriendImg" src="${item.profilePic}" /> ${item.name} ${item.age}</li>`
-        });
+function renderFriends(data, id,addBTN) {
+    data.forEach(item => {
+        document.getElementById(id).innerHTML += `
+        <li class="eachFriendLI">
+        <img class="eachFriendImg" src="${item.profilePic}" />
+         ${item.name} Age: ${item.age} ${addBTN?"<button>Add</button>":""}
+         </li>`
     });
 }
 function getElement(ref) {
@@ -33,7 +18,6 @@ function signUp() {
         mobileNumber = Number(getElement('#mobileNumber').value),
         password = getElement('#password').value;
 
-        console.log();
     var reader = new FileReader();
 
     reader.addEventListener("loadend", _ => {
@@ -44,13 +28,48 @@ function signUp() {
             profilePic: base64Data,
             mobileNumber,
             password
-        },{}).then((data,status) => {
-            console.log(1111111111111111,data,status);
-        }).catch(err=>{
-            console.log('errrrrrrrrrrrrrrrr',err);
-        })
+        }, {})
+            .then((data, status) => {
+                localStorage.setItem('token', data.data.token);
+                window.location.replace('/dashboard.html');
+            })
+            .catch(err => {
+                console.log('errrrrrrrrrrrrrrrr', err);
+            })
     });
 
     reader.readAsDataURL(profilePic);
 
+}
+
+function logIn() {
+    let mobileNumber = Number(getElement('#mobileNumber').value),
+        password = getElement('#password').value;
+    axios.post('/signIn', { mobileNumber, password })
+        .then((data, status) => {
+            localStorage.setItem('token', data.data.token);
+            window.location.replace('/dashboard.html');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+}
+
+function fetchFriends() {
+    axios.get('/friends/')
+}
+
+async function findFriend() {
+    let mobileNumber = getElement('#mobNumber').value;
+    axios.get(`/friends/find?mobileNumber=${mobileNumber}`, {
+        headers: {
+            Authorization: await localStorage.getItem('token')
+        }
+    })
+        .then((data, status) => {
+            renderFriends([data.data.friend],'foundFriends',true);
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
