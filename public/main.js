@@ -74,9 +74,19 @@ async function findFriend() {
         }
     })
         .then((data, status) => {
+
             renderFriends([data.data.friend], 'foundFriends', true);
         })
         .catch(err => {
             console.log(err);
         });
 }
+(async function () {
+    axios.get(`/friendss`, {
+        headers: {
+            Authorization: await localStorage.getItem('token')
+        }
+    }).then(data => {
+        console.log(data);
+    })
+})();

@@ -7,7 +7,7 @@ module.exports = {
         const newUser = await new User({ ...req.body });
         newUser.save(async function (err, data) {
             if (err) return res.status(400).json({ status: false, err });
-            const token = await JWT.sign({ userId: newUser._id },'secretKey');
+            const token = await JWT.sign({ userId: newUser._id }, 'secretKey');
             res.status(200).json({ status: true, token })
         });
     },
@@ -16,10 +16,16 @@ module.exports = {
         const foundUser = await User.findOne({ mobileNumber });
         if (!foundUser) return res.status(400).json({ status: false, message: "Your account is not found with given credentials." });
         if (foundUser.isValidPassword(password)) {
-            const token = await JWT.sign({ userId: foundUser._id },'secretKey');
+            const token = await JWT.sign({ userId: foundUser._id }, 'secretKey');
             res.status(200).json({ status: true, token });
         } else {
             res.status(400).json({ status: false, message: "Password is Incorrect!" });
         }
+    },
+    getFriends: async function (req, res) {
+        const foundUser = await User.findById(req.userId).populate('friends', 'name mobileNumber age');
+        console.log(foundUser);
+        if (!foundUser) return res.status(400).json({ status: false, message: "User Not found with Given Credentials" });
+        res.status(200).json({ status: true, friends: foundUser.friends })
     }
 };
