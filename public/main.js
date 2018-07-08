@@ -1,15 +1,26 @@
-function renderFriends(data, id,addBTN) {
+function renderFriends(data, id, addBTN) {
     data.forEach(item => {
+        console.log(item._id)
         document.getElementById(id).innerHTML += `
         <li class="eachFriendLI">
         <img class="eachFriendImg" src="${item.profilePic}" />
-         ${item.name} Age: ${item.age} ${addBTN?"<button>Add</button>":""}
+         ${item.name} Age: ${item.age} ${addBTN ? `<button onclick='addFriend("${item._id}")'>Add</button>` : ""}
          </li>`
     });
 }
+
+async function addFriend(id) {
+    axios.post('/friends/add', { friendId: id }, {
+        headers: {
+            Authorization: await localStorage.token
+        }
+    }).then(data => { console.log(data); }).catch(err => { console.log(err); })
+}
+
 function getElement(ref) {
     return document.querySelector(ref);
 }
+
 
 function signUp() {
     let name = getElement('#name').value,
@@ -55,10 +66,6 @@ function logIn() {
         });
 }
 
-function fetchFriends() {
-    axios.get('/friends/')
-}
-
 async function findFriend() {
     let mobileNumber = getElement('#mobNumber').value;
     axios.get(`/friends/find?mobileNumber=${mobileNumber}`, {
@@ -67,7 +74,7 @@ async function findFriend() {
         }
     })
         .then((data, status) => {
-            renderFriends([data.data.friend],'foundFriends',true);
+            renderFriends([data.data.friend], 'foundFriends', true);
         })
         .catch(err => {
             console.log(err);

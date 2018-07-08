@@ -4,7 +4,7 @@ module.exports = async function (req, res, next) {
     let token = req.headers['authorization'];
     let decoded = await JWT.decode(token);
     if (decoded) {
-        req.body.userId = decoded.userId;
+        req.userId = decoded.userId;
         next();
     } else next("Unauthorized");
 }
