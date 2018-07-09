@@ -1,6 +1,6 @@
 const User = require('../Models/User');
 const JWT = require('jsonwebtoken');
-
+const FeedBack = require('../Models/feedback');
 module.exports = {
     signUp: async function (req, res) {
         console.log(req.body);
@@ -23,9 +23,15 @@ module.exports = {
         }
     },
     getFriends: async function (req, res) {
-        const foundUser = await User.findById(req.userId).populate('friends', 'name mobileNumber age');
-        console.log(foundUser);
+        const foundUser = await User.findById(req.userId).populate('friends', 'name mobileNumber age profilePic');
         if (!foundUser) return res.status(400).json({ status: false, message: "User Not found with Given Credentials" });
-        res.status(200).json({ status: true, friends: foundUser.friends })
+        res.status(200).json({ status: true, friends: foundUser.friends });
+    },
+    getfeedBack: async (req, res) => {
+        const newFeedBack = await new FeedBack({ message: req.body.message, userId: req.userId });
+        newFeedBack.save(function (err) {
+            if (err) return res.status(400).json({ status: false, err });
+            res.status(200).json({ status: true });
+        });
     }
 };

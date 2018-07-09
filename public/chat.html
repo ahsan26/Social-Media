@@ -5,13 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Social Media</title>
+    <title>Chat</title>
     <link rel="stylesheet" href="styles.css" />
-    <script>
-        if (localStorage.token === null || localStorage.token === undefined) { window.location.replace('/'); }
-    </script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="main.js"></script>
+    <link rel="stylesheet" href="/node_modules/material-design-lite/material.min.css">
+    <script src="/node_modules/material-design-lite/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
 </head>
 
 <body>
@@ -29,16 +28,12 @@
             <a href="feedback.html">
                 <li>Feedback</li>
             </a>
-            <a href="index.html">
-                <li>SignUp</li>
-            </a>
-            <a href="signIn.html">
-                <li>SignIn</li>
-            </a>
         </ul>
     </nav>
-    <h1>Dashboard</h1>
     <ul id="friends"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>

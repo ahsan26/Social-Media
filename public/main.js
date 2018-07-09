@@ -1,12 +1,19 @@
-function renderFriends(data, id, addBTN) {
+function renderFriends(data, id, addBTN, alreadyFriend, chatBTN) {
+    console.log(data);
     data.forEach(item => {
-        console.log(item._id)
+        console.log(item._id);
         document.getElementById(id).innerHTML += `
         <li class="eachFriendLI">
         <img class="eachFriendImg" src="${item.profilePic}" />
          ${item.name} Age: ${item.age} ${addBTN ? `<button onclick='addFriend("${item._id}")'>Add</button>` : ""}
+         ${alreadyFriend ? '<button>Added</button>' : ''}
+         ${chatBTN ? `<button onClick="startChat('${item._id}')">Chat</button>` : ''}
          </li>`
     });
+}
+
+function startChat(id) {
+  
 }
 
 async function addFriend(id) {
@@ -74,19 +81,35 @@ async function findFriend() {
         }
     })
         .then((data, status) => {
-
-            renderFriends([data.data.friend], 'foundFriends', true);
+            if (data.data.alreadyFriend) return renderFriends([data.data.foundFriend], 'foundFriends', false, data.data.alreadyFriend);
+            renderFriends([data.data.foundFriend], 'foundFriends', true);
         })
         .catch(err => {
             console.log(err);
         });
 }
 (async function () {
-    axios.get(`/friendss`, {
+    if (window.location.pathname.indexOf('dashboard') !== -1 || window.location.pathname.indexOf('chat') !== -1) {
+        axios.get(`/friendss`, {
+            headers: {
+                Authorization: await localStorage.getItem('token')
+            }
+        }).then(data => {
+            if (window.location.pathname.indexOf('chat') !== -1) renderFriends(data.data.friends, 'friends', false, false, true);
+            else renderFriends(data.data.friends, 'friends');
+        })
+    }
+})();
+
+async function saveFeedBack() {
+    let feedBack = getElement('#feedbackT').value;
+    axios.post('/feedback', { message: feedBack }, {
         headers: {
             Authorization: await localStorage.getItem('token')
         }
     }).then(data => {
-        console.log(data);
-    })
-})();
+        getElement('#feedbackT').value = '';
+    }).catch(err => {
+        console.log(err);
+    });
+}

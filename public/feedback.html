@@ -1,15 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>FeeBack</title>
+    <title>FeedBack</title>
+    <link rel="stylesheet" href="styles.css" />
+
 </head>
+
 <body>
-    <form action="JavaScript:void(0)">
-        
+    <ul>
+        <a href="dashboard.html">
+            <li>Dashboard</li>
+        </a>
+        <a href="chat.html">
+            <li>Chat</li>
+        </a>
+        <a href="friends.html">
+            <li>Friends</li>
+        </a>
+        <a href="feedback.html">
+            <li>Feedback</li>
+        </a>
+        <a href="index.html">
+            <li>SignUp</li>
+        </a>
+        <a href="signIn.html">
+            <li>SignIn</li>
+        </a>
+    </ul>
+    <br />
+    <br />
+    <form action="JavaScript:void(0)" onsubmit="saveFeedBack()">
+        <label for="feedbackT">Your FeedBack</label>
+        <textarea id="feedbackT"></textarea>
+        <button type="submit">Send</button>
     </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="main.js"></script>
 </body>
+
 </html>
