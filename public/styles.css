@@ -37,3 +37,15 @@ nav li {
     list-style-type: none;
     margin-right: 5px;
 }
+
+#chatWindow{
+    width: 500px;
+    height: 500px;
+    border: 2px solid red;
+    margin: 50px auto;
+}
+#controls{
+    position: relative;
+top: 95%;
+left: 40%;
+}

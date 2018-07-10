@@ -13,7 +13,8 @@ function renderFriends(data, id, addBTN, alreadyFriend, chatBTN) {
 }
 
 function startChat(id) {
-  
+    getElement('#chatWindow').style.display = 'block';
+    localStorage.setItem('friendId', id);
 }
 
 async function addFriend(id) {
@@ -109,6 +110,18 @@ async function saveFeedBack() {
         }
     }).then(data => {
         getElement('#feedbackT').value = '';
+    }).catch(err => {
+        console.log(err);
+    });
+}
+async function sendMessage() {
+    let message = getElement('#message').value;
+    axios.post('/message', { message, friendId: await localStorage.getItem('friendId') }, {
+        headers: {
+            Authorization: await localStorage.getItem('token')
+        }
+    }).then(data => {
+        console.log(data);
     }).catch(err => {
         console.log(err);
     });
