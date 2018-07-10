@@ -49,3 +49,6 @@ nav li {
 top: 95%;
 left: 40%;
 }
+#chatWindow{
+    display: none;
+}

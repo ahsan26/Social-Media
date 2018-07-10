@@ -3,8 +3,8 @@ const JWT = require('jsonwebtoken');
 const FeedBack = require('../Models/feedback');
 module.exports = {
     signUp: async function (req, res) {
-        console.log(req.body);
         const newUser = await new User({ ...req.body });
+        console.log(13213321);
         newUser.save(async function (err, data) {
             if (err) return res.status(400).json({ status: false, err });
             const token = await JWT.sign({ userId: newUser._id }, 'secretKey');

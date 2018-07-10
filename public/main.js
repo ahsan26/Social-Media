@@ -15,6 +15,25 @@ function renderFriends(data, id, addBTN, alreadyFriend, chatBTN) {
 function startChat(id) {
     getElement('#chatWindow').style.display = 'block';
     localStorage.setItem('friendId', id);
+    renderPreviousMessages(id);
+}
+
+async function renderPreviousMessages(id) {
+    axios.get(`/message?friendId=${id}`, { headers: { Authorization: await localStorage.getItem('token') } }).then(data => {
+        data.data.messages.forEach(item=>{
+            renderEachMessage(item, '#chatDiv',data.data.userId);
+        })
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+function renderEachMessage(message, id,currentUserId){
+    if(message.userId===currentUserId){
+        console.log(321321);
+        return  getElement(id).innerHTML+=`<li style="color: skyblue;">${message.txt}</li>`;
+    }
+    getElement(id).innerHTML+=`<li>${message.txt}</li>`;
 }
 
 async function addFriend(id) {
@@ -41,10 +60,11 @@ function signUp() {
 
     reader.addEventListener("loadend", _ => {
         let base64Data = reader.result
+        console.log(name, age, base64Data, mobileNumber, password);
         axios.post('/signUp', {
             name,
             age,
-            profilePic: base64Data,
+            profilePic: 'base64Data',
             mobileNumber,
             password
         }, {})

@@ -6,7 +6,7 @@ const FriendsRoute = require('./routes/friends');
 const MessagesRoute = require('./routes/messages');
 
 // Setting Middle Wares 
-app.use(express.json());
+app.use(bodyParser.json());
 
 // Integrating MLAB Database
 require('./database');
