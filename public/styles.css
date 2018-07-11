@@ -46,8 +46,7 @@ nav li {
 }
 #controls{
     position: relative;
-top: 95%;
-left: 40%;
+    left: 40%;
 }
 #chatWindow{
     display: none;

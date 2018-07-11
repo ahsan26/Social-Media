@@ -1,8 +1,8 @@
-const JWT = require('jsonwebtoken');
+const parseToken = require('./parseToken');
 
 module.exports = async function (req, res, next) {
     let token = req.headers['authorization'];
-    let decoded = await JWT.decode(token);
+    let decoded = parseToken(token);
     if (decoded) {
         req.userId = decoded.userId;
         next();

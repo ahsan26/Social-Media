@@ -1,5 +1,6 @@
+; let currentUserId;
+
 function renderFriends(data, id, addBTN, alreadyFriend, chatBTN) {
-    console.log(data);
     data.forEach(item => {
         console.log(item._id);
         document.getElementById(id).innerHTML += `
@@ -20,20 +21,20 @@ function startChat(id) {
 
 async function renderPreviousMessages(id) {
     axios.get(`/message?friendId=${id}`, { headers: { Authorization: await localStorage.getItem('token') } }).then(data => {
-        data.data.messages.forEach(item=>{
-            renderEachMessage(item, '#chatDiv',data.data.userId);
+        data.data.messages.forEach(item => {
+            currentUserId = data.data.userId;
+            renderEachMessage(item, '#chatDiv', data.data.userId);
         })
     }).catch(err => {
         console.log(err);
     });
 }
 
-function renderEachMessage(message, id,currentUserId){
-    if(message.userId===currentUserId){
-        console.log(321321);
-        return  getElement(id).innerHTML+=`<li style="color: skyblue;">${message.txt}</li>`;
+function renderEachMessage(message, id, currentUserId) {
+    if (message.userId === currentUserId) {
+        return getElement(id).innerHTML += `<li style="color: green;">${message.txt}</li>`;
     }
-    getElement(id).innerHTML+=`<li>${message.txt}</li>`;
+    getElement(id).innerHTML += `<li>${message.txt}</li>`;
 }
 
 async function addFriend(id) {
@@ -142,7 +143,15 @@ async function sendMessage() {
         }
     }).then(data => {
         console.log(data);
+        getElement('#message').value = '';
     }).catch(err => {
         console.log(err);
+        getElement('#message').value = '';
     });
 }
+
+var socket = io.connect("http://localhost:6900");
+socket.emit("userInfo",{token: localStorage.getItem('token')})
+socket.on('message', data => {
+    renderEachMessage(data, '#chatDiv', currentUserId);
+})

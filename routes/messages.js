@@ -3,8 +3,8 @@ const router = express();
 const { send, messages } = require('../Controllers/messages');
 const ValidateToken = require('../Utils/validateToken');
 
-
-router.route('/').post(ValidateToken, send);
-router.route('/').get(ValidateToken, messages);
-
-module.exports = router;
+module.exports = socket => {
+    router.route('/').post(ValidateToken, (req, res, next) => { send(req, res, next, socket) });
+    router.route('/').get(ValidateToken, messages);
+    return router;
+};
