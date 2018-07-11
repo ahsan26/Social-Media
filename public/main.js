@@ -65,7 +65,7 @@ function signUp() {
         axios.post('/signUp', {
             name,
             age,
-            profilePic: 'base64Data',
+            profilePic: base64Data,
             mobileNumber,
             password
         }, {})

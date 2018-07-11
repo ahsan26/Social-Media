@@ -6,7 +6,7 @@ const FriendsRoute = require('./routes/friends');
 const MessagesRoute = require('./routes/messages');
 const socket = require('socket.io');
 const parseToken = require('./Utils/parseToken');
-let users= [];
+let users = [];
 
 // Setting Middle Wares 
 app.use(bodyParser.json());
@@ -36,9 +36,14 @@ io.on("connection", function (socket) {
     console.log("Client Connected", socket.id);
     socket.on('userInfo', async function (data) {
         let info = await parseToken(data.token);
-       users.push({userId:info.userId, _id: socket.id});
-       console.log(users);
-    })
+        users.push({ userId: info.userId, _id: socket.id });
+        setMessageRoute();
+    });
+    socket.on('disconnect', async function () {
+        users = await users.filter(item => item._id !== socket.id);
+        setMessageRoute();
+    });
 });
-
-app.use('/message', MessagesRoute(io));
+function setMessageRoute() {
+    app.use('/message', MessagesRoute(io, users));
+}

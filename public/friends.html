@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +8,34 @@
     <title>Friends</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body onload="fetchFriends()">
-        <nav>
-            <ul>
-                <a href="dashboard.html">
-                    <li>Dashboard</li>
-                </a>
-                <a href="chat.html">
-                    <li>Chat</li>
-                </a>
-                <a href="friends.html">
-                    <li>Friends</li>
-                </a>
-                <a href="feedback.html">
-                    <li>Feedback</li>
-                </a>
-            </ul>
-        </nav>
-        <form action="JavaScript:void(0)" onsubmit="findFriend()">
-            <input type="number"  id= "mobNumber" />
-            <button type="submit">Find Friend</button>
-        </form>
-    
-        <ul id="foundFriends"></ul>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="main.js"></script>
+    <nav>
+        <ul>
+            <a href="dashboard.html">
+                <li>Dashboard</li>
+            </a>
+            <a href="chat.html">
+                <li>Chat</li>
+            </a>
+            <a href="friends.html">
+                <li>Friends</li>
+            </a>
+            <a href="feedback.html">
+                <li>Feedback</li>
+            </a>
+        </ul>
+    </nav>
+    <form action="JavaScript:void(0)" onsubmit="findFriend()">
+        <input type="number" id="mobNumber" />
+        <button type="submit">Find Friend</button>
+    </form>
+
+    <ul id="foundFriends"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="main.js"></script>
 </body>
+
 </html>
