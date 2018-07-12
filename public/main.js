@@ -150,8 +150,51 @@ async function sendMessage() {
     });
 }
 
+function post() {
+    let desc = getElement('#description').value,
+        imgFile = getElement('#img').files[0];
+    var reader = new FileReader();
+
+    reader.addEventListener("loadend", async _ => {
+        let base64Data = reader.result
+        axios.post('/posts', { desc, img: base64Data }, {
+            headers: {
+                Authorization: await localStorage.getItem('token')
+            }
+        }).then(data => {
+            console.log(data);
+        }).catch(err => {
+            console.log(err);
+        });
+    });
+
+    reader.readAsDataURL(imgFile);
+}
+
 var socket = io.connect("http://localhost:6900");
-socket.emit("userInfo",{token: localStorage.getItem('token')})
+socket.emit("userInfo", { token: localStorage.getItem('token') })
 socket.on('message', data => {
     renderEachMessage(data, '#chatDiv', currentUserId);
 })
+
+function renderPosts(data) {
+    console.log(data[0])
+    getElement('#posts').innerHTML = data.map(post => `<div class="eachPostContainer">
+                        <div class="posterInfo">
+                            <img src='${post.userId.profilePic}' class="eachPostOwnerPic" />
+                            <p class="postOwnerName">${post.userId.name}</p>
+                        </div>
+                        <div class="postInfo">
+                            <img src="${post.img}" class="eachPostImg" />
+                            <p>${post.description}</p>
+                        </div>
+                    </div>`)
+}
+
+async function fetchPosts() {
+    axios.get('/posts', { headers: { Authorization: await localStorage.getItem('token') } }).then(posts => {
+        renderPosts(posts.data.posts);
+    }).catch(err => {
+        console.log(err);
+    })
+}

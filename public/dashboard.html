@@ -15,7 +15,7 @@
     <script src="main.js"></script>
 </head>
 
-<body>
+<body onload="fetchPosts()">
     <nav>
         <ul>
             <a href="dashboard.html">
@@ -39,7 +39,19 @@
         </ul>
     </nav>
     <h1>Dashboard</h1>
-    <ul id="friends"></ul>
+    <div id="friendsShow">
+        <h2>Friends</h2>
+        <ul id="friends"></ul>
+    </div>
+    <div id="postsContainer">
+        <h2>Posts</h2>
+        <form action="JavaScript:void(0)" onsubmit="post()">
+            <input type="text" id="description" placeholder="What's on your mind?" />
+            <input type="file" id="img" />
+            <button type="submit">Post</button>
+        </form>
+        <div id="posts"></div>
+    </div>
 </body>
 
 </html>

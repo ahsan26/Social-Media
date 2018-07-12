@@ -6,6 +6,7 @@ const FriendsRoute = require('./routes/friends');
 const MessagesRoute = require('./routes/messages');
 const socket = require('socket.io');
 const parseToken = require('./Utils/parseToken');
+const postsRoute = require('./routes/posts');
 let users = [];
 
 // Setting Middle Wares 
@@ -25,6 +26,7 @@ app.use(express.static('public'));
 // Setting Routes
 app.use(UserRoutes);
 app.use('/friends', FriendsRoute);
+app.use('/posts',postsRoute)
 
 const server = app.listen(app.get('port'), function () {
     console.log(`Server is Started on ${app.get('port')}`);

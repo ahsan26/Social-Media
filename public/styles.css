@@ -51,3 +51,22 @@ nav li {
 #chatWindow{
     display: none;
 }
+.eachPostOwnerPic{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.eachPostImg{
+    width: 400px;
+    height: 400px;
+}
+.posterInfo{
+    display: inline-flex;
+}
+.postOwnerName{
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.eachPostContainer{
+    margin-top: 20px;
+}
