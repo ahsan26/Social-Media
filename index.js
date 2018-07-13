@@ -17,7 +17,7 @@ require('./database');
 
 
 // Port Setting
-app.set('port', 6900 || process.env.PORT);
+app.set('port', 6300 || process.env.PORT);
 
 // Setting Default folder
 app.use(express.static('public'));

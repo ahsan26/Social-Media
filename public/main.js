@@ -50,18 +50,16 @@ function getElement(ref) {
 }
 
 
-function signUp() {
+async function signUp() {
     let name = getElement('#name').value,
         age = getElement('#age').value,
         profilePic = getElement('#profilePic').files[0],
         mobileNumber = Number(getElement('#mobileNumber').value),
         password = getElement('#password').value;
-
-    var reader = new FileReader();
+   var reader = new FileReader();
 
     reader.addEventListener("loadend", _ => {
         let base64Data = reader.result
-        console.log(name, age, base64Data, mobileNumber, password);
         axios.post('/signUp', {
             name,
             age,
@@ -150,43 +148,75 @@ async function sendMessage() {
     });
 }
 
-function post() {
+async function post() {
     let desc = getElement('#description').value,
         imgFile = getElement('#img').files[0];
-    var reader = new FileReader();
+    if (imgFile) {
 
-    reader.addEventListener("loadend", async _ => {
-        let base64Data = reader.result
-        axios.post('/posts', { desc, img: base64Data }, {
+        var reader = new FileReader();
+
+        reader.addEventListener("loadend", async _ => {
+            let base64Data = reader.result
+            axios.post('/posts', { desc, img: base64Data }, {
+                headers: {
+                    Authorization: await localStorage.getItem('token')
+                }
+            }).then(data => {
+                fetchPosts();
+            }).catch(err => {
+                console.log(err);
+            });
+        });
+
+        reader.readAsDataURL(imgFile);
+    } else {
+        axios.post('/posts', { desc }, {
             headers: {
                 Authorization: await localStorage.getItem('token')
             }
         }).then(data => {
-            console.log(data);
+            fetchPosts();
         }).catch(err => {
             console.log(err);
         });
-    });
-
-    reader.readAsDataURL(imgFile);
+    }
 }
 
 var socket = io.connect("http://localhost:6900");
 socket.emit("userInfo", { token: localStorage.getItem('token') })
 socket.on('message', data => {
     renderEachMessage(data, '#chatDiv', currentUserId);
-})
+});
+function reply(commentId){
+
+}
+function renderComments(comments) {
+    const ui = comments.map(item => `<li>${item.txt} <a href="JavaScript:void(0)" onClick="reply('${item._id}')">Reply</a></li>`)
+    return ui.join('');
+}
 
 function renderPosts(data) {
-    console.log(data[0])
-    getElement('#posts').innerHTML = data.map(post => `<div class="eachPostContainer">
+    getElement('#posts').innerHTML = data.map((post, i) => `<div class="eachPostContainer">
                         <div class="posterInfo">
                             <img src='${post.userId.profilePic}' class="eachPostOwnerPic" />
                             <p class="postOwnerName">${post.userId.name}</p>
                         </div>
                         <div class="postInfo">
-                            <img src="${post.img}" class="eachPostImg" />
+                            ${post.img ? `<img src="${post.img}" class="eachPostImg" />` : ''}    
                             <p>${post.description}</p>
+                        </div>
+                        <div class="responseControls">
+                            <div class="likesController">
+                                <button onClick="like('${post._id}')"><i class="fas fa-thumbs-up"></i></button>
+                                <p>${post.likes}</p>
+                            </div>
+                            <div class="commentsController">
+                                <input type="text" id="comment${i}" />
+                                <button onClick="comment('#comment${i}','${post._id}')">Comment</button>
+                            </div>
+                        </div>
+                        <div class="comments${i}Container">
+                            <ul class="comments${i} removeStUL">${renderComments(post.comments)}</ul>
                         </div>
                     </div>`)
 }
@@ -197,4 +227,23 @@ async function fetchPosts() {
     }).catch(err => {
         console.log(err);
     })
+}
+async function like(id) {
+    axios.get(`/posts/like?id=${id}`, { headers: { Authorization: await localStorage.getItem('token') } })
+        .then(data => {
+            fetchPosts();
+        }).catch(err => {
+            console.log(err);
+        });
+}
+
+async function comment(eid, postId) {
+    let comment = getElement(eid).value;
+    axios.post('/posts/comment', { txt: comment, postId }, { headers: { Authorization: await localStorage.token } })
+        .then(data => {
+            fetchPosts();
+        })
+        .catch(err => {
+            console.log(err);
+        })
 }

@@ -69,4 +69,19 @@ nav li {
 }
 .eachPostContainer{
     margin-top: 20px;
+    box-shadow: 10px 10px 22px 5px grey;
+    padding: 5px;
+}
+#posts{
+    width: 400px;
+    margin: 0px auto;
+    height: 500px;
+    overflow: scroll;
+}
+.likesController{
+    display: inline-flex;
+}
+.removeStUL{
+    list-style-type: none;
+    color: gray;
 }
