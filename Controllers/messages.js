@@ -2,7 +2,7 @@ const Message = require('../Models/chat');
 
 module.exports = {
     send: async function (req, res, next, io, users) {
-        console.log(io.sockets.id,io.sockets._id)
+        console.log(io.sockets.id, io.sockets._id)
         const conversations = await Message.findOne({ $or: [{ chatters: [req.userId, req.body.friendId] }, { chatters: [req.body.friendId, req.userId] }] });
         if (conversations) {
             // This scenario is just for the conversation which was saved in the database
@@ -12,9 +12,9 @@ module.exports = {
                 const foundFriendInfo = await users.find(item => item.userId === req.body.friendId);
                 const currentuserfoundInfo = await users.find(item => item.userId == req.userId);
                 const data = { txt: req.body.message, userId: req.userId };
-                console.log(foundFriendInfo, currentuserfoundInfo,users);
+                console.log(foundFriendInfo, currentuserfoundInfo, users);
                 if (foundFriendInfo) {
-                    io.sockets.connected[foundFriendInfo._id].emit("message",data );
+                    io.sockets.connected[foundFriendInfo._id].emit("message", data);
                     io.sockets.connected[currentuserfoundInfo._id].emit("message", data);
                 } else {
                     io.sockets.connected[currentuserfoundInfo._id].emit("message", data);

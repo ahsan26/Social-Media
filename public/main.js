@@ -1,4 +1,4 @@
-; let currentUserId;
+let currentUserId;
 
 function renderFriends(data, id, addBTN, alreadyFriend, chatBTN) {
     data.forEach(item => {
@@ -21,6 +21,7 @@ function startChat(id) {
 
 async function renderPreviousMessages(id) {
     axios.get(`/message?friendId=${id}`, { headers: { Authorization: await localStorage.getItem('token') } }).then(data => {
+        getElement('#chatDiv').innerHTML = '';
         data.data.messages.forEach(item => {
             currentUserId = data.data.userId;
             renderEachMessage(item, '#chatDiv', data.data.userId);
@@ -56,7 +57,7 @@ async function signUp() {
         profilePic = getElement('#profilePic').files[0],
         mobileNumber = Number(getElement('#mobileNumber').value),
         password = getElement('#password').value;
-   var reader = new FileReader();
+    var reader = new FileReader();
 
     reader.addEventListener("loadend", _ => {
         let base64Data = reader.result
@@ -187,15 +188,31 @@ socket.emit("userInfo", { token: localStorage.getItem('token') })
 socket.on('message', data => {
     renderEachMessage(data, '#chatDiv', currentUserId);
 });
-function reply(commentId){
 
+function reply(commentId, postId) {
+    getElement(`#comment_${commentId}`).innerHTML += `<div id="replyBox_${commentId}"><input type="text" id="reply_${commentId}" /><button onClick="saveRepliedComment('${commentId}','${postId}')">Save</button></div>`;
 }
+
+async function saveRepliedComment(commentId, postId) {
+    let val = getElement(`#reply_${commentId}`).value;
+    axios.post('/posts/nComment', { commentId, txt: val, postId }, { headers: { Authorization: await localStorage.token } }).then(data => {
+        getElement(`#replyBox_${commentId}`).remove();
+        fetchPosts();
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
 function renderComments(comments) {
-    const ui = comments.map(item => `<li>${item.txt} <a href="JavaScript:void(0)" onClick="reply('${item._id}')">Reply</a></li>`)
+    const ui = comments.map(item => `<li id="comment_${item._id}"><div class="nCposterInfo"><img width='20px' height='20px' style="margin-right: 5px;" src='${item.userId.profilePic}' /><p class="cpostername">${item.userId.name}</p></div><p class="nC">${item.txt} <a href="JavaScript:void(0)" onClick="reply('${item._id}','${item.postId}')">Reply</a></p>${item.nestedComments ? `<ul>${renderNestedComments(item.nestedComments)}</ul>` : ''}</li>`)
     return ui.join('');
 }
-
+function renderNestedComments(comments) {
+    return (comments.map(item => `<li><div class="nCposterInfo"><img width='20px' height='20px' style="margin-right: 5px;" src="${item.userId.profilePic}" /><p class="cpostername">${item.userId.name}</p></div><p class="nC">${item.txt}</p></li>`)).join('');
+}
+var posts = [];
 function renderPosts(data) {
+    posts = data;
     getElement('#posts').innerHTML = data.map((post, i) => `<div class="eachPostContainer">
                         <div class="posterInfo">
                             <img src='${post.userId.profilePic}' class="eachPostOwnerPic" />
@@ -208,7 +225,7 @@ function renderPosts(data) {
                         <div class="responseControls">
                             <div class="likesController">
                                 <button onClick="like('${post._id}')"><i class="fas fa-thumbs-up"></i></button>
-                                <p>${post.likes}</p>
+                                <p><a href="JavaScript:void(0)" onClick="renderPostLikers('${i}')" data-toggle="modal" data-target="#exampleModalCenter">${post.likes.length}</a></p>
                             </div>
                             <div class="commentsController">
                                 <input type="text" id="comment${i}" />
@@ -221,8 +238,18 @@ function renderPosts(data) {
                     </div>`)
 }
 
+function renderPostLikers(index) {
+    getElement('#likesbody').innerHTML = (posts[index].likes.map(item => {
+        return (`<li class="eachFriendLI">
+        <img class="eachFriendImg" src="${item.profilePic}" />
+         ${item.name}
+         </li>`)
+    })).join('');
+}
+
 async function fetchPosts() {
     axios.get('/posts', { headers: { Authorization: await localStorage.getItem('token') } }).then(posts => {
+        console.log(posts)
         renderPosts(posts.data.posts);
     }).catch(err => {
         console.log(err);

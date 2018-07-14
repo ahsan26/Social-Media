@@ -16,6 +16,9 @@ const CommentSchema = new Schema({
         ref: "User",
         required: true
     },
+    nestedComment: {
+        type: Boolean
+    },
     nestedComments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comments'

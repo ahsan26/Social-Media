@@ -17,7 +17,7 @@ require('./database');
 
 
 // Port Setting
-app.set('port', 6300 || process.env.PORT);
+app.set('port', 6500 || process.env.PORT);
 
 // Setting Default folder
 app.use(express.static('public'));
@@ -49,3 +49,4 @@ io.on("connection", function (socket) {
 function setMessageRoute() {
     app.use('/message', MessagesRoute(io, users));
 }
+setMessageRoute();

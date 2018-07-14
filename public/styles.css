@@ -85,3 +85,14 @@ nav li {
     list-style-type: none;
     color: gray;
 }
+.nCposterInfo{
+    display: inline-flex;
+}
+.nC{
+    display: block;
+    margin-top: -10px;
+    margin-left: 20px;
+}
+.cpostername{
+    margin: 0px;
+}
