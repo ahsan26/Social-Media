@@ -17,7 +17,7 @@ require('./database');
 
 
 // Port Setting
-app.set('port', 6500 || process.env.PORT);
+app.set('port', 19000);
 
 // Setting Default folder
 app.use(express.static('public'));
@@ -26,7 +26,7 @@ app.use(express.static('public'));
 // Setting Routes
 app.use(UserRoutes);
 app.use('/friends', FriendsRoute);
-app.use('/posts',postsRoute)
+app.use('/posts', postsRoute)
 
 const server = app.listen(app.get('port'), function () {
     console.log(`Server is Started on ${app.get('port')}`);
